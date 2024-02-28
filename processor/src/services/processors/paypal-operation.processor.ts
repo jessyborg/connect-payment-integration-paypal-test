@@ -1,6 +1,5 @@
-import { healthCheckCommercetoolsPermissions, statusHandler } from '@commercetools/connect-payments-sdk';
+import { ErrorGeneral, healthCheckCommercetoolsPermissions, statusHandler } from '@commercetools/connect-payments-sdk';
 import { config } from '../../config/config';
-import { PaymentModificationStatus } from '../../dtos/operations/payment-intents.dto';
 import { paymentSDK } from '../../payment-sdk';
 import {
   CancelPaymentRequest,
@@ -15,6 +14,11 @@ import { PaypalPaymentAPI } from '../api/api';
 const packageJSON = require('../../../package.json');
 
 export class PaypalOperationProcessor implements OperationProcessor {
+  private paypalClient: PaypalPaymentAPI;
+  constructor() {
+    this.paypalClient = new PaypalPaymentAPI();
+  }
+
   async config(): Promise<ConfigResponse> {
     return {
       clientId: config.paypalClientId,
@@ -23,7 +27,6 @@ export class PaypalOperationProcessor implements OperationProcessor {
   }
 
   async status(): Promise<StatusResponse> {
-    const paypalAPI = new PaypalPaymentAPI();
     const handler = await statusHandler({
       timeout: config.healthCheckTimeout,
       checks: [
@@ -34,7 +37,7 @@ export class PaypalOperationProcessor implements OperationProcessor {
         }),
         async () => {
           try {
-            const healthCheck = await paypalAPI.healthCheck();
+            const healthCheck = await this.paypalClient.healthCheck();
             if (healthCheck?.status === 200) {
               const paymentMethods = 'paypal';
               return {
@@ -45,7 +48,7 @@ export class PaypalOperationProcessor implements OperationProcessor {
                 },
               };
             } else {
-              throw new Error(healthCheck?.data?.message);
+              throw new Error(healthCheck?.statusText);
             }
           } catch (e) {
             return {
@@ -70,14 +73,29 @@ export class PaypalOperationProcessor implements OperationProcessor {
   }
 
   async capturePayment(request: CapturePaymentRequest): Promise<PaymentProviderModificationResponse> {
-    return { outcome: PaymentModificationStatus.APPROVED, pspReference: request.payment.interfaceId as string };
+    return await this.paypalClient.captureOrder(request.payment.interfaceId);
   }
 
   async cancelPayment(request: CancelPaymentRequest): Promise<PaymentProviderModificationResponse> {
-    return { outcome: PaymentModificationStatus.APPROVED, pspReference: request.payment.interfaceId as string };
+    throw new ErrorGeneral('operation not supported', {
+      fields: {
+        pspReference: request.payment.interfaceId,
+      },
+      privateMessage: "connector doesn't support cancel operation",
+    });
   }
 
   async refundPayment(request: RefundPaymentRequest): Promise<PaymentProviderModificationResponse> {
-    return { outcome: PaymentModificationStatus.APPROVED, pspReference: request.payment.interfaceId as string };
+    const transaction = request.payment.transactions.find((t) => t.type === 'Charge' && t.state === 'Success');
+    const captureId = transaction?.interactionId;
+    if (this.isPartialRefund(request)) {
+      return this.paypalClient.refundPartialPayment(captureId, request.amount);
+    }
+
+    return this.paypalClient.refundFullPayment(captureId);
+  }
+
+  private isPartialRefund(request: RefundPaymentRequest): boolean {
+    return request.payment.amountPlanned.centAmount > request.amount.centAmount;
   }
 }
