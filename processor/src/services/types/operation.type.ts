@@ -1,4 +1,3 @@
-import { PaymentOutcome } from '../../dtos/paypal-payment.dto';
 import { ConfigResponseSchemaDTO } from '../../dtos/operations/config.dto';
 import {
   AmountSchemaDTO,
@@ -20,12 +19,6 @@ export type CancelPaymentRequest = {
 export type RefundPaymentRequest = {
   amount: AmountSchemaDTO;
   payment: Payment;
-};
-
-export type PaymentProviderResponse = {
-  resultCode: PaymentOutcome;
-  pspReference: string;
-  paymentMethodType: string;
 };
 
 export type PaymentProviderModificationResponse = {
