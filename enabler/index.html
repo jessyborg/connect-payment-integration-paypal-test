@@ -56,14 +56,24 @@
                 processorUrl: __VITE_PROCESSOR_URL__,
                 sessionId: sessionId,
                 config: {
-                  
+                  payment: {
+                    intent: 'CAPTURE',
+                    payment_source: {
+                      paypal: {
+                        experience_context: {
+                          payment_method_preference: 'IMMEDIATE_PAYMENT_REQUIRED',
+                          user_action: 'PAY_NOW'
+                        }
+                      }
+                    }
+                  }
                 },
                 onComplete: ({ isSuccess, paymentReference }) => {
                   console.log('onComplete', { isSuccess, paymentReference });
                 },
               });
         
-              enabler.createComponent('card', {
+              enabler.createComponent('paypal', {
                 config: {},
               })
               .then(e => e.mount('#card-component'));

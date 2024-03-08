@@ -15,25 +15,26 @@ export interface PaymentComponent {
 export type EnablerOptions = {
   processorUrl: string;
   sessionId: string;
-  config?: { 
-    locale?: string;
-    showPayButton?: boolean;
+  config: {
+    payment?: { 
+      intent: string;
+      payment_source: {
+        paypal: {
+          experience_context: {
+            payment_method_preference: string;
+            user_action: string;
+          }
+        }
+      }
+    };
   };
-  onActionRequired?: () => Promise<void>;
   onComplete?: (result: PaymentResult) => void;
   onError?: (error: any) => void;
 };
 
-
 export enum PaymentMethod {
-  applepay = "applepay",
-  card = "card",
-  dropin = "dropin",
-  googlepay = "googlepay",
-  ideal = "ideal",
-  klarna = "klarna",
-  paypal = "paypal",
-}
+  paypal = 'paypal'
+};
 
 export type PaymentResult = {
   isSuccess: true;
@@ -43,6 +44,8 @@ export type PaymentResult = {
 export type ComponentOptions = {
   config: {
     showPayButton?: boolean;
+    intent: string;
+    payment
   };
 };
 
