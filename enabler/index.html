@@ -55,7 +55,9 @@
               const enabler = new Enabler({
                 processorUrl: __VITE_PROCESSOR_URL__,
                 sessionId: sessionId,
-                config: {},
+                config: {
+                  currency: "EUR"
+                },
                 onComplete: ({ isSuccess, paymentReference }) => {
                   console.log('onComplete', { isSuccess, paymentReference });
                 },

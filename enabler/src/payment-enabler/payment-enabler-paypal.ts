@@ -23,7 +23,6 @@ export class PaypalPaymentEnabler implements PaymentEnabler {
 
     const paypalCheckout = await loadScript({
       clientId: configJson.clientId,
-      ...(options.config.locale ? { locale: options.config.locale } : {}),
       ...(options.config.currency ? { currency: options.config.currency } : {})
     })
 
