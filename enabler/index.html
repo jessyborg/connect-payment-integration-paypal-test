@@ -55,6 +55,13 @@
               const enabler = new Enabler({
                 processorUrl: __VITE_PROCESSOR_URL__,
                 sessionId: sessionId,
+                config: {},
+                onComplete: ({ isSuccess, paymentReference }) => {
+                  console.log('onComplete', { isSuccess, paymentReference });
+                },
+              });
+        
+              enabler.createComponent('paypal', {
                 config: {
                   payment: {
                     intent: 'CAPTURE',
@@ -68,13 +75,6 @@
                     }
                   }
                 },
-                onComplete: ({ isSuccess, paymentReference }) => {
-                  console.log('onComplete', { isSuccess, paymentReference });
-                },
-              });
-        
-              enabler.createComponent('paypal', {
-                config: {},
               })
               .then(e => e.mount('#card-component'));
             });

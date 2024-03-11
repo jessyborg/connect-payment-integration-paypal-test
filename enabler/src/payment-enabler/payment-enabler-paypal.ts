@@ -32,7 +32,6 @@ export class PaypalPaymentEnabler implements PaymentEnabler {
         sdk: paypalCheckout,
         processorUrl: options.processorUrl,
         sessionId: options.sessionId,
-        paymentPayload: options.config.payment,
       }
     }
   }

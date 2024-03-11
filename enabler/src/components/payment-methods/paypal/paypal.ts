@@ -22,8 +22,8 @@ export class Paypal extends BaseComponent {
             headers: {
               'Content-Type': 'application/json', 'X-Session-Id': this.sessionId
             },
-            body: JSON.stringify(this.paymentConfig)
-          })
+            body: JSON.stringify(this.payload)
+          }) 
           const data = await response.json()
           if (data.id) {
             return data.id

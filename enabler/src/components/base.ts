@@ -1,5 +1,5 @@
 import { PayPalButtonsComponent, PayPalNamespace } from '@paypal/paypal-js'
-import { ComponentOptions, PaymentComponent, PaymentMethod, PaymentResult } from '../payment-enabler/payment-enabler';
+import { ComponentOptions, PaymentComponent, PaymentMethod, PaymentPayload, PaymentResult } from '../payment-enabler/payment-enabler';
 
 export type ElementOptions = {
   paymentMethod: PaymentMethod;
@@ -32,10 +32,12 @@ export abstract class BaseComponent implements PaymentComponent {
   protected onComplete: (result: PaymentResult) => void;
   protected onError: (error?: any) => void;
   protected component: PayPalButtonsComponent
+  protected payload: PaymentPayload;
 
   constructor(paymentMethod: PaymentMethod, baseOptions: BaseOptions, componentOptions: ComponentOptions) {
     this.paymentMethod = paymentMethod;
     this.sdk = baseOptions.sdk;
+    this.payload = componentOptions.config.payment ? componentOptions.config.payment : undefined
     this.component = this._create()
   }
 

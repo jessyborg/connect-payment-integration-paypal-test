@@ -15,19 +15,7 @@ export interface PaymentComponent {
 export type EnablerOptions = {
   processorUrl: string;
   sessionId: string;
-  config: {
-    payment?: { 
-      intent: string;
-      payment_source: {
-        paypal: {
-          experience_context: {
-            payment_method_preference: string;
-            user_action: string;
-          }
-        }
-      }
-    };
-  };
+  config?: { showPayButton?: boolean };
   onComplete?: (result: PaymentResult) => void;
   onError?: (error: any) => void;
 };
@@ -41,11 +29,22 @@ export type PaymentResult = {
   paymentReference: string;
 } | { isSuccess: false };
 
+export type PaymentPayload = {
+  intent: string;
+  payment_source: {
+    paypal: {
+      experience_context: {
+        payment_method_preference: string;
+        user_action: string;
+      }
+    }
+  }
+}
+
 export type ComponentOptions = {
   config: {
     showPayButton?: boolean;
-    intent: string;
-    payment
+    payment?: PaymentPayload;
   };
 };
 
