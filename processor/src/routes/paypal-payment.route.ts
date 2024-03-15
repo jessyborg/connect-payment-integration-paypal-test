@@ -1,4 +1,4 @@
-import { SessionAuthenticationHook } from '@commercetools/connect-payments-sdk';
+import { SessionHeaderAuthenticationHook } from '@commercetools/connect-payments-sdk';
 import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import {
   CreateOrderRequestDTO,
@@ -18,7 +18,7 @@ import { WebhookVerificationHook } from '../libs/fastify/hooks/paypal-webhook-ve
 
 type PaymentRoutesOptions = {
   paymentService: PaypalPaymentService;
-  sessionAuthHook: SessionAuthenticationHook;
+  sessionHeaderAuthHook: SessionHeaderAuthenticationHook;
   signatureAuthHook: WebhookVerificationHook;
 };
 
@@ -26,7 +26,7 @@ export const paymentRoutes = async (fastify: FastifyInstance, opts: FastifyPlugi
   fastify.post<{ Body: CreateOrderRequestDTO; Reply: CreateOrderResponseDTO }>(
     '/checkout/orders',
     {
-      preHandler: [opts.sessionAuthHook.authenticate()],
+      preHandler: [opts.sessionHeaderAuthHook.authenticate()],
       schema: {
         body: OrderRequest,
         response: {

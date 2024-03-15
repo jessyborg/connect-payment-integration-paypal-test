@@ -1,4 +1,4 @@
-import { ComponentOptions } from '../../../payment-enabler/payment-enabler';
+import { ComponentOptions, PaymentMethod } from '../../../payment-enabler/payment-enabler';
 import buttonStyles from '../../../style/button.module.scss';
 import inputFieldStyles from '../../../style/inputField.module.scss';
 import styles from '../../../style/style.module.scss';
@@ -7,8 +7,7 @@ import { addFormFieldsEventListeners, fieldIds, getCardBrand, getInput, validate
 
 export class Card extends BaseComponent {
   constructor(baseOptions: BaseOptions, componentOptions: ComponentOptions) {
-    super(baseOptions, componentOptions);
-    this.paymentMethod = 'card';
+    super(PaymentMethod.card, baseOptions, componentOptions);
   }
 
   mount(selector: string) {

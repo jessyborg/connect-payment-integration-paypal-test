@@ -5,8 +5,8 @@ import { app } from '../app';
 
 export default async function (server: FastifyInstance) {
   await server.register(paymentRoutes, {
+    sessionHeaderAuthHook: paymentSDK.sessionHeaderAuthHookFn,
     paymentService: app.services.paymentService,
-    sessionAuthHook: paymentSDK.sessionAuthHookFn,
     signatureAuthHook: app.hooks.signatureAuthHook,
   });
 }
