@@ -11,6 +11,7 @@ export enum PaypalUrls {
   AUTHENTICATION = '/v1/oauth2/token',
   HEALTH_CHECK = '/v1/notifications/webhooks-event-types',
   ORDERS = '/v2/checkout/orders',
+  GET_ORDERS = '/v2/checkout/orders/{resourceId}',
   ORDERS_CAPTURE = '/v2/checkout/orders/{resourceId}/capture',
   ORDERS_REFUND = '/v2/payments/captures/{resourceId}/refund',
   NOTIFICATION_VERIFY = '/v1/notifications/verify-webhook-signature',
@@ -131,6 +132,11 @@ export type CaptureOrderResponse = {
 export type CreateOrderResponse = {
   id: string;
   status: string;
+};
+
+export type GetOrderResponse = {
+  id: string;
+  purchase_units: PurchaseUnits[];
 };
 
 export type RefundResponse = {

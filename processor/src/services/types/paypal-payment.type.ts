@@ -1,8 +1,7 @@
 import { CommercetoolsCartService, CommercetoolsPaymentService } from '@commercetools/connect-payments-sdk';
-import { CaptureOrderRequestDTO } from '../../dtos/paypal-payment.dto';
 
 export type OrderConfirmation = {
-  data: CaptureOrderRequestDTO & { orderId: string };
+  data: { orderId: string };
 };
 
 export enum PaymentOutcome {

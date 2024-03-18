@@ -3,13 +3,11 @@ import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import {
   CreateOrderRequestDTO,
   CreateOrderResponseDTO,
-  CaptureOrderRequestDTO,
   CaptureOrderResponseDTO,
   CaptureOrderParamsDTO,
   OrderRequest,
   OrderResponse,
   CaptureOrderResponse,
-  CaptureOrderRequest,
   NotificationPayloadDTO,
   NotificationPayload,
 } from '../dtos/paypal-payment.dto';
@@ -43,14 +41,12 @@ export const paymentRoutes = async (fastify: FastifyInstance, opts: FastifyPlugi
 
   fastify.post<{
     Params: CaptureOrderParamsDTO;
-    Body: CaptureOrderRequestDTO;
     Reply: CaptureOrderResponseDTO;
   }>(
     '/checkout/orders/:id/capture',
     {
       preHandler: [opts.sessionHeaderAuthHook.authenticate()],
       schema: {
-        body: CaptureOrderRequest,
         response: {
           200: CaptureOrderResponse,
         },
@@ -59,7 +55,6 @@ export const paymentRoutes = async (fastify: FastifyInstance, opts: FastifyPlugi
     async (request, reply) => {
       const resp = await opts.paymentService.confirmPayment({
         data: {
-          ...request.body,
           orderId: request.params.id,
         },
       });

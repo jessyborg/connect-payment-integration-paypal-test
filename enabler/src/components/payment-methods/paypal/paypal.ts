@@ -56,14 +56,14 @@ export class PaypalComponent extends DefaultPaypalComponent {
             return data.id;
           }
 
-          const errorDetail = data?.errors[0]?.details?.[0];
+          const errorDetail = data?.errors?.[0]?.details?.[0];
           const errorMessage = errorDetail
-            ? `${errorDetail.issue} ${errorDetail.description} (${data.debug_id})`
+            ? `${errorDetail?.issue} ${errorDetail?.description} (${data?.debug_id})`
             : JSON.stringify(data);
 
           throw new Error(errorMessage);
         } catch (err) {
-          console.error(err);
+          this.baseOptions.onError(err);
         }
       },
       onApprove: async (data, actions): Promise<void> => {
@@ -79,20 +79,23 @@ export class PaypalComponent extends DefaultPaypalComponent {
           );
 
           const orderData = await response.json();
-          const errorDetail = orderData?.errors[0]?.details?.[0];
+          const errorDetail = orderData?.errors?.[0]?.details?.[0];
           const errorMessage = errorDetail
-            ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
+            ? `${errorDetail?.issue} ${errorDetail?.description} (${orderData?.debug_id})`
             : JSON.stringify(orderData);
 
-          if (errorDetail.issue === "INSTRUMENT_DECLINED" && actions) {
+          if (errorDetail?.issue === "INSTRUMENT_DECLINED" && actions) {
             return actions.restart();
-          } else if (errorDetail || orderData.captureStatus === "DECLINED") {
+          } else if (errorDetail || orderData?.captureStatus === "DECLINED") {
             throw new Error(errorMessage);
           } else {
-            console.log(orderData);
+            this.baseOptions.onComplete({
+              paymentReference: orderData?.paymentReference,
+              isSuccess: orderData?.captureStatus === 'COMPLETED'
+            });
           }
         } catch (err) {
-          console.error(err);
+          this.baseOptions.onError(err);
         }
       },
     });

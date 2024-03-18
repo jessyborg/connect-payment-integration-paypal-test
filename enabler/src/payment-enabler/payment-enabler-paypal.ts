@@ -1,10 +1,7 @@
 import { BaseOptions } from "../components/base";
 import { PaypalBuilder } from "../components/payment-methods/paypal/paypal";
 import { loadScript } from "@paypal/paypal-js";
-import {
-  EnablerOptions,
-  PaymentEnabler,
-} from "./payment-enabler";
+import { EnablerOptions, PaymentEnabler } from "./payment-enabler";
 
 export class PaypalPaymentEnabler implements PaymentEnabler {
   setupData: Promise<{ baseOptions: BaseOptions }>;
@@ -31,6 +28,15 @@ export class PaypalPaymentEnabler implements PaymentEnabler {
 
     const paypalCheckout = await loadScript({
       clientId: configJson.clientId,
+      disableFunding: [
+        "paylater",
+        "card",
+        "venmo",
+        "credit",
+        "giropay",
+        "sofort",
+        "sepa",
+      ],
       ...(options.currency ? { currency: options.currency } : {}),
     });
 
@@ -39,6 +45,8 @@ export class PaypalPaymentEnabler implements PaymentEnabler {
         sdk: paypalCheckout,
         processorUrl: options.processorUrl,
         sessionId: options.sessionId,
+        onComplete: options.onComplete,
+        onError: options.onError
       },
     };
   };
@@ -46,7 +54,7 @@ export class PaypalPaymentEnabler implements PaymentEnabler {
   async createComponentBuilder(type: string) {
     const setupData = await this.setupData;
     if (!setupData) {
-      throw new Error('PaypalPaymentEnabler not initialized');
+      throw new Error("PaypalPaymentEnabler not initialized");
     }
     const supportedMethods = {
       paypal: PaypalBuilder,

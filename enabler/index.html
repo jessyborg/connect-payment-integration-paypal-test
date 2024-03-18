@@ -55,12 +55,13 @@
               const enabler = new Enabler({
                 processorUrl: __VITE_PROCESSOR_URL__,
                 sessionId: sessionId,
-                config: {
-                  currency: "EUR"
-                },
+                currency: "EUR",
                 onComplete: ({ isSuccess, paymentReference }) => {
                   console.log('onComplete', { isSuccess, paymentReference });
                 },
+                onError: (err) => {
+                  console.error('onError', err)
+                }
               });
               const builder = await enabler.createComponentBuilder('paypal');
               const component = await builder.build({

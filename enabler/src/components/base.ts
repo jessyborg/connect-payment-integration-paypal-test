@@ -5,6 +5,7 @@ import {
   PaymentComponentBuilder,
   PaymentMethod,
   PaymentPayload,
+  PaymentResult,
 } from "../payment-enabler/payment-enabler";
 
 export type ElementOptions = {
@@ -15,6 +16,8 @@ export type BaseOptions = {
   sdk: PayPalNamespace;
   processorUrl: string;
   sessionId: string;
+  onComplete?: (result: PaymentResult) => void;
+  onError?: (error: any) => void;
 };
 
 /**
