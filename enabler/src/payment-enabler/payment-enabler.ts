@@ -12,10 +12,15 @@ export interface PaymentComponent {
   };
 }
 
+export interface PaymentComponentBuilder {
+  componentHasSubmit: boolean;
+  build(config: ComponentOptions): PaymentComponent;
+}
+
 export type EnablerOptions = {
   processorUrl: string;
   sessionId: string;
-  config?: { showPayButton?: boolean };
+  currency?: string;
   onComplete?: (result: PaymentResult) => void;
   onError?: (error: any) => void;
 };
@@ -42,15 +47,12 @@ export type PaymentPayload = {
 }
 
 export type ComponentOptions = {
-  config: {
-    showPayButton?: boolean;
-    payment?: PaymentPayload;
-  };
+  paymentDraft: PaymentPayload
 };
 
 export interface PaymentEnabler {
   /** 
    * @throws {Error}
    */
-  createComponent: (type: string, opts: ComponentOptions) => Promise<PaymentComponent | never>
+  createComponentBuilder: (type: string) => Promise<PaymentComponent | never>
 }

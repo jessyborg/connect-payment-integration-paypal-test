@@ -48,7 +48,7 @@ export const paymentRoutes = async (fastify: FastifyInstance, opts: FastifyPlugi
   }>(
     '/checkout/orders/:id/capture',
     {
-      preHandler: [opts.sessionAuthHook.authenticate()],
+      preHandler: [opts.sessionHeaderAuthHook.authenticate()],
       schema: {
         body: CaptureOrderRequest,
         response: {

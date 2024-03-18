@@ -62,11 +62,10 @@
                   console.log('onComplete', { isSuccess, paymentReference });
                 },
               });
-        
-              enabler.createComponent('paypal', {
-                config: {
-                  payment: {
-                    intent: 'CAPTURE',
+              const builder = await enabler.createComponentBuilder('paypal');
+              const component = await builder.build({
+                paymentDraft: {
+                  intent: 'CAPTURE',
                     payment_source: {
                       paypal: {
                         experience_context: {
@@ -75,10 +74,9 @@
                         }
                       }
                     }
-                  }
-                },
+                }
               })
-              .then(e => e.mount('#card-component'));
+              component.mount('#card-component')
             });
       
           </script>
