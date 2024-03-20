@@ -65,8 +65,8 @@
               });
               const builder = await enabler.createComponentBuilder('paypal');
               const component = await builder.build({
-                onClick: () => {
-                  console.log('there was a validation error')
+                onClick: () => { // to be used for validation
+                  return false // change to true, to test payment flow
                 }
               })
               component.mount('#card-component')

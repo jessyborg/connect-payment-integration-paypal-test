@@ -38,8 +38,11 @@ export class PaypalComponent extends DefaultPaypalComponent {
 
   init() {
     this.component = this.baseOptions.sdk.Buttons({
-      onClick: () => {
-        this.componentOptions.onClick();
+      onClick: async (_, actions) => {
+        if (!this.componentOptions.onClick()) {
+          return actions.reject()
+        } 
+        return actions.resolve()
       },
       onError: (err) => {
         this.baseOptions.onError(err);
