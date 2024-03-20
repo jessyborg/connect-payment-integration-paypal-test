@@ -41,10 +41,6 @@ export const OrderResponse = Type.Object({
   paymentReference: Type.String(),
 });
 
-export const CaptureOrderRequest = Type.Object({
-  paymentReference: Type.String(),
-});
-
 export const CaptureOrderResponse = Type.Object({
   id: Type.String(),
   paymentReference: Type.String(),
@@ -58,7 +54,6 @@ export const CaptureOrderParams = Type.Object({
 export type CreateOrderRequestDTO = Static<typeof OrderRequest>;
 export type CreateOrderResponseDTO = Static<typeof OrderResponse>;
 
-export type CaptureOrderRequestDTO = Static<typeof CaptureOrderRequest>;
 export type CaptureOrderResponseDTO = Static<typeof CaptureOrderResponse>;
 
 export type CaptureOrderParamsDTO = Static<typeof CaptureOrderParams>;

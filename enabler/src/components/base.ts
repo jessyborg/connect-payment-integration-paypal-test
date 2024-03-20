@@ -1,62 +1,79 @@
-import { FakeSdk } from '../fake-sdk';
-import { ComponentOptions, PaymentComponent, PaymentMethod, PaymentResult } from '../payment-enabler/payment-enabler';
+import { PayPalButtonsComponent, PayPalNamespace } from "@paypal/paypal-js";
+import {
+  ComponentOptions,
+  PaymentComponent,
+  PaymentComponentBuilder,
+  PaymentMethod,
+  PaymentPayload,
+  PaymentResult,
+} from "../payment-enabler/payment-enabler";
 
 export type ElementOptions = {
   paymentMethod: PaymentMethod;
 };
 
 export type BaseOptions = {
-  sdk: FakeSdk;
+  sdk: PayPalNamespace;
   processorUrl: string;
   sessionId: string;
-  environment: string;
-  config: {
-    showPayButton?: boolean;
-  };
-  onComplete: (result: PaymentResult) => void;
-  onError: (error?: any) => void;
-}
+  onComplete?: (result: PaymentResult) => void;
+  onError?: (error: any) => void;
+};
 
 /**
  * Base Web Component
  */
-export abstract class BaseComponent implements PaymentComponent {
-  protected paymentMethod: ElementOptions['paymentMethod'];
-  protected sdk: FakeSdk;
-  protected processorUrl: BaseOptions['processorUrl'];
-  protected sessionId: BaseOptions['sessionId'];
-  protected environment: BaseOptions['environment'];
-  protected config: BaseOptions['config'];
-  protected showPayButton: boolean;
-  protected onComplete: (result: PaymentResult) => void;
-  protected onError: (error?: any) => void;
+export abstract class PaypalBaseComponentBuilder
+  implements PaymentComponentBuilder
+{
+  public componentHasSubmit = true;
 
-  constructor(paymentMethod: PaymentMethod, baseOptions: BaseOptions, componentOptions: ComponentOptions) {
+  protected paymentMethod: PaymentMethod;
+  protected paymentDraft: PaymentPayload;
+  protected baseOptions: BaseOptions;
+
+  constructor(paymentMethod: PaymentMethod, baseOptions: BaseOptions) {
     this.paymentMethod = paymentMethod;
-    this.sdk = baseOptions.sdk;
-    this.processorUrl = baseOptions.processorUrl;
-    this.sessionId = baseOptions.sessionId;
-    this.environment = baseOptions.environment;
-    this.config = baseOptions.config;
-    this.onComplete = baseOptions.onComplete;
-    this.onError = baseOptions.onError;
-    this.showPayButton = 
-      'showPayButton' in componentOptions.config ? !!componentOptions.config.showPayButton :
-        'showPayButton' in baseOptions.config ? !!baseOptions.config.showPayButton :
-          true;
+    this.baseOptions = baseOptions;
   }
 
-  abstract submit(): void;
+  build(config: ComponentOptions): PaymentComponent {
+    const component = new DefaultPaypalComponent(
+      this.paymentMethod,
+      this.baseOptions,
+      config
+    );
+    component.init();
+    return component;
+  }
+}
 
-  abstract mount(selector: string): void ;
+export class DefaultPaypalComponent implements PaymentComponent {
+  protected component: PayPalButtonsComponent;
+  protected paymentMethod: PaymentMethod;
+  protected baseOptions: BaseOptions;
+  protected componentOptions: ComponentOptions;
 
-  showValidation?(): void;
-  isValid?(): boolean;
-  getState?(): {
-    card?: {
-      endDigits?: string;
-      brand?: string;
-      expiryDate? : string;
-    }
-  };
+  constructor(
+    paymentMethod: PaymentMethod,
+    baseOptions: BaseOptions,
+    componentOptions: ComponentOptions
+  ) {
+    this.paymentMethod = paymentMethod;
+    this.baseOptions = baseOptions;
+    this.componentOptions = componentOptions;
+  }
+
+  init() {
+    this.component = this.baseOptions.sdk.Buttons({});
+  }
+
+  submit(): void {
+    return;
+  }
+
+  mount(selector: string): void {
+    console.log(this.component.isEligible);
+    this.component.render(selector);
+  }
 }

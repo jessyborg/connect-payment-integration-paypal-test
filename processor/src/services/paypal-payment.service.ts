@@ -202,8 +202,9 @@ export class PaypalPaymentService extends AbstractPaymentService {
   }
 
   public async confirmPayment(opts: OrderConfirmation): Promise<CaptureOrderResponseDTO> {
+    const order = await this.paypalClient.getOrder(opts.data.orderId);
     const ctPayment = await this.ctPaymentService.getPayment({
-      id: opts.data.paymentReference,
+      id: order.purchase_units[0].invoice_id,
     });
 
     this.validateInterfaceIdMismatch(ctPayment, opts.data.orderId);

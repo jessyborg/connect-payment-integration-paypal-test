@@ -55,18 +55,29 @@
               const enabler = new Enabler({
                 processorUrl: __VITE_PROCESSOR_URL__,
                 sessionId: sessionId,
-                config: {
-                  
-                },
+                currency: "EUR",
                 onComplete: ({ isSuccess, paymentReference }) => {
                   console.log('onComplete', { isSuccess, paymentReference });
                 },
+                onError: (err) => {
+                  console.error('onError', err)
+                }
               });
-        
-              enabler.createComponent('card', {
-                config: {},
+              const builder = await enabler.createComponentBuilder('paypal');
+              const component = await builder.build({
+                paymentDraft: {
+                  intent: 'CAPTURE',
+                    payment_source: {
+                      paypal: {
+                        experience_context: {
+                          payment_method_preference: 'IMMEDIATE_PAYMENT_REQUIRED',
+                          user_action: 'PAY_NOW'
+                        }
+                      }
+                    }
+                }
               })
-              .then(e => e.mount('#card-component'));
+              component.mount('#card-component')
             });
       
           </script>
