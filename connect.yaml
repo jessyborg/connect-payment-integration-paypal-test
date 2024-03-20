@@ -46,4 +46,3 @@ deployAs:
           required: true
   - name: enabler
     applicationType: assets
-    endpoint: /
