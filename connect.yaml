@@ -42,4 +42,5 @@ deployAs:
           description: Paypal client secret
           required: true
   - name: enabler
-    applicationType: assets
+    applicationType: service
+    endpoint: /
