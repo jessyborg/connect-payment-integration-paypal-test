@@ -34,20 +34,9 @@ export type PaymentResult = {
   paymentReference: string;
 } | { isSuccess: false };
 
-export type PaymentPayload = {
-  intent: string;
-  payment_source: {
-    paypal: {
-      experience_context: {
-        payment_method_preference: string;
-        user_action: string;
-      }
-    }
-  }
-}
-
 export type ComponentOptions = {
-  paymentDraft: PaymentPayload
+  showPayButton?: boolean;
+  onClick?: () => boolean;
 };
 
 export interface PaymentEnabler {
