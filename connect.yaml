@@ -49,7 +49,7 @@ deployAs:
           description: Paypal client secret
           required: true
   - name: enabler
-    applicationType: service
+    applicationType: assets
     endpoint: /
     configuration:
       standardConfiguration:
