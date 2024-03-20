@@ -20,7 +20,8 @@ export interface PaymentComponentBuilder {
 export type EnablerOptions = {
   processorUrl: string;
   sessionId: string;
-  currency?: string;
+  locale?: string; // TODO check if this needs implementation
+  onActionRequired?: () => Promise<void>; // TODO check if this needs implementation
   onComplete?: (result: PaymentResult) => void;
   onError?: (error: any) => void;
 };
