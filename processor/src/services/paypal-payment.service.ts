@@ -6,7 +6,7 @@ import {
   NotificationPayloadDTO,
 } from '../dtos/paypal-payment.dto';
 
-import { getCartIdFromContext, getPaymentInterfaceFromContext, getRequestContext } from '../libs/fastify/context/context';
+import { getCartIdFromContext, getPaymentInterfaceFromContext } from '../libs/fastify/context/context';
 import { PaypalAPI } from '../clients/paypal.client';
 import { Address, Cart, Money, Payment } from '@commercetools/platform-sdk';
 import {
@@ -38,7 +38,6 @@ import { paymentSDK } from '../payment-sdk';
 import { SupportedPaymentComponentsSchemaDTO } from '../dtos/operations/payment-componets.dto';
 import { AbstractPaymentService } from './abstract-payment.service';
 import { NotificationConverter } from './converters/notification.converter';
-import { requestContext } from '@fastify/request-context';
 const packageJSON = require('../../package.json');
 
 export class PaypalPaymentService extends AbstractPaymentService {
@@ -63,7 +62,7 @@ export class PaypalPaymentService extends AbstractPaymentService {
     const ctCart = await this.ctCartService.getCart({
       id: getCartIdFromContext(),
     });
-    
+
     return {
       currency: ctCart.totalPrice.currencyCode,
       clientId: getConfig().paypalClientId,
@@ -272,6 +271,8 @@ export class PaypalPaymentService extends AbstractPaymentService {
    * @returns Promise with mocking data containing operation status and PSP reference
    */
   async capturePayment(request: CapturePaymentRequest): Promise<PaymentProviderModificationResponse> {
+    await this.ctPaymentService.validatePaymentCharge(request);
+
     const data = await this.paypalClient.captureOrder(request.payment.interfaceId);
     const response = this.convertCaptureOrderResponse(data, request.payment.id);
 
@@ -310,6 +311,8 @@ export class PaypalPaymentService extends AbstractPaymentService {
    * @returns Promise with mocking data containing operation status and PSP reference
    */
   async refundPayment(request: RefundPaymentRequest): Promise<PaymentProviderModificationResponse> {
+    await this.ctPaymentService.validatePaymentRefund(request);
+
     const transaction = request.payment.transactions.find(
       (t) => t.type === TransactionTypes.CHARGE && t.state === TransactionStates.SUCCESS,
     );
