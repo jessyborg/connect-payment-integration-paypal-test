@@ -42,9 +42,4 @@ deployAs:
           description: Paypal client secret
           required: true
   - name: enabler
-    applicationType: service
-    endpoint: /
-    configuration:
-      standardConfiguration:
-        - key: CTP_PROJECT_KEY
-          description: Commercetools project key
+    applicationType: assets
