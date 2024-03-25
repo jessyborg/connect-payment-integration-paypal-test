@@ -1,6 +1,5 @@
-import { ErrorGeneral, TransactionData, UpdatePayment } from '@commercetools/connect-payments-sdk';
+import { ErrorGeneral, TransactionData, UpdatePayment, Money } from '@commercetools/connect-payments-sdk';
 import { TransactionStates, TransactionTypes, NotificationEventType } from '../types/paypal-payment.type';
-import { Money } from '@commercetools/platform-sdk';
 import { NotificationPayloadDTO, NotificationResourceDTO } from '../../dtos/paypal-payment.dto';
 
 export class NotificationConverter {

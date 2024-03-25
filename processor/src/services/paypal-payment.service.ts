@@ -1,4 +1,12 @@
-import { ErrorGeneral, healthCheckCommercetoolsPermissions, statusHandler } from '@commercetools/connect-payments-sdk';
+import {
+  ErrorGeneral,
+  healthCheckCommercetoolsPermissions,
+  statusHandler,
+  Address,
+  Cart,
+  Money,
+  Payment,
+} from '@commercetools/connect-payments-sdk';
 import {
   CreateOrderRequestDTO,
   CreateOrderResponseDTO,
@@ -8,7 +16,6 @@ import {
 
 import { getCartIdFromContext, getPaymentInterfaceFromContext } from '../libs/fastify/context/context';
 import { PaypalAPI } from '../clients/paypal.client';
-import { Address, Cart, Money, Payment } from '@commercetools/platform-sdk';
 import {
   CaptureOrderResponse,
   CreateOrderRequest,

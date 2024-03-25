@@ -15,8 +15,7 @@ import {
   RefundResponse,
   parseAmount,
 } from './types/paypal.client.type';
-import { ErrorGeneral } from '@commercetools/connect-payments-sdk';
-import { Money } from '@commercetools/platform-sdk';
+import { ErrorGeneral, Money } from '@commercetools/connect-payments-sdk';
 import { randomUUID } from 'crypto';
 
 export class PaypalAPI implements IPaypalPaymentAPI {
