@@ -1,4 +1,4 @@
-import { Cart } from '@commercetools/platform-sdk';
+import { Cart } from '@commercetools/connect-payments-sdk';
 
 export const mockGetCartResult = {
   id: 'some-cart-id',
