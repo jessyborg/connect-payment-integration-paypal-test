@@ -185,7 +185,7 @@ export class PaypalPaymentService extends AbstractPaymentService {
       }),
     });
 
-    const payment = await this.ctCartService.addPayment({
+    await this.ctCartService.addPayment({
       resource: {
         id: ctCart.id,
         version: ctCart.version,
@@ -197,9 +197,15 @@ export class PaypalPaymentService extends AbstractPaymentService {
     const paypalRequestData = this.convertCreatePaymentIntentRequest(ctCart, ctPayment, amountPlanned, data);
     const paypalResponse = await this.paypalClient.createOrder(paypalRequestData);
 
+    const updatedPayment = await this.ctPaymentService.updatePayment({
+      id: ctPayment.id,
+      pspReference: paypalResponse.id,
+      paymentMethod: 'paypal',
+    });
+
     return {
       id: paypalResponse.id,
-      paymentReference: payment.id,
+      paymentReference: updatedPayment.id,
     };
   }
 
