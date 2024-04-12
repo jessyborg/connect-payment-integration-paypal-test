@@ -50,6 +50,8 @@ In addition, in order to support connect, the tax integration connector template
 Connect deployment configuration is specified in `connect.yaml` which is required information needed for publishing of the application. Following is the deployment configuration used by full ingestion and incremental updater modules
 ```
 deployAs:
+  - name: enabler
+    applicationType: assets
   - name: processor
     applicationType: service
     endpoint: /
@@ -62,17 +64,21 @@ deployAs:
           description: Commercetools client ID
           required: true
         - key: CTP_AUTH_URL
-          description: Commercetools Auth URL
+          description: commercetools Auth URL
           required: true
+          default: https://auth.europe-west1.gcp.commercetools.com
         - key: CTP_API_URL
-          description: Commercetools API URL
+          description: commercetools API URL
           required: true
+          default: https://api.europe-west1.gcp.commercetools.com
         - key: CTP_SESSION_URL
           description: Session API URL
           required: true
+          default: https://session.europe-west1.gcp.commercetools.com
         - key: CTP_JWKS_URL
           description: JWKs url
           required: true
+          default: https://mc-api.europe-west1.gcp.commercetools.com/.well-known/jwks.json
         - key: CTP_JWT_ISSUER
           description: JWT Issuer for jwt validation
           required: true
@@ -92,8 +98,6 @@ deployAs:
         - key: PAYPAL_CLIENT_SECRET
           description: Paypal client secret
           required: true
-  - name: enabler
-    applicationType: assets
 ```
 
 Here you can see the details about various variables in configuration
