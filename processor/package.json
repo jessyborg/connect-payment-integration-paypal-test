@@ -1,6 +1,6 @@
 {
   "name": "paypal-payment-integration",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Paypal Payment integration",
   "main": "dist/server.js",
   "scripts": {
