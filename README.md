@@ -82,6 +82,7 @@ deployAs:
         - key: CTP_JWT_ISSUER
           description: JWT Issuer for jwt validation
           required: true
+          default: https://mc-api.europe-west1.gcp.commercetools.com
         - key: PAYPAL_CLIENT_ID
           description: Paypal client ID
           required: true
@@ -108,7 +109,7 @@ Here you can see the details about various variables in configuration
 - CTP_API_URL: The URL for commercetools composable commerce API. Default value is `https://api.europe-west1.gcp.commercetools.com`.
 - CTP_SESSION_URL: The URL for session creation in commercetools platform. Connectors relies on the session created to be able to share information between enabler and processor. The default value is `https://session.europe-west1.gcp.commercetools.com`.
 - CTP_JWKS_URL: The URL which provides JSON Web Key Set.
-- CTP_JWT_ISSUER: The issuer inside JSON Web Token which is required in JWT validation process.
+- CTP_JWT_ISSUER: The issuer inside JSON Web Token which is required in JWT validation process. Default value is `https://mc-api.europe-west1.gcp.commercetools.com`
 - PAYPAL_ENVIRONMENT: The indicator of Paypal environment.  Default value is `TEST`. It can be configured either as `LIVE` or `TEST`.
 - PAYPAL_CLIENT_ID: The unique identifier of a PayPal account.
 - PAYPAL_CLIENT_SECRET: It is used to authenticate a PayPal client ID. Both ID and secret are required to obtain access token for PayPal API calls. For details, please refer to [Get started with PayPal REST APIs](https://developer.paypal.com/api/rest/)
