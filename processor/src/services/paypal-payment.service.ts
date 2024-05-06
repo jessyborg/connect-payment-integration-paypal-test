@@ -183,6 +183,10 @@ export class PaypalPaymentService extends AbstractPaymentService {
           id: ctCart.customerId,
         },
       }),
+      ...(!ctCart.customerId &&
+        ctCart.anonymousId && {
+          anonymousId: ctCart.anonymousId,
+        }),
     });
 
     await this.ctCartService.addPayment({
