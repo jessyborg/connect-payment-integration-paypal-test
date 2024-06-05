@@ -42,6 +42,7 @@ export class PaypalComponent extends DefaultPaypalComponent {
         height: 40,
         label: "buynow",
       },
+      fundingSource: 'paypal',
       onClick: async (_, actions) => {
         if (!this.componentOptions.onClick()) {
           return actions.reject();
