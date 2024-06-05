@@ -74,4 +74,8 @@ export class DefaultPaypalComponent implements PaymentComponent {
   mount(selector: string): void {
     this.component.render(selector);
   }
+
+  isAvailable() {
+    return Promise.resolve(true);
+  }
 }
