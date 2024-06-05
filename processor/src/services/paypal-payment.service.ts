@@ -45,6 +45,7 @@ import { paymentSDK } from '../payment-sdk';
 import { SupportedPaymentComponentsSchemaDTO } from '../dtos/operations/payment-componets.dto';
 import { AbstractPaymentService } from './abstract-payment.service';
 import { NotificationConverter } from './converters/notification.converter';
+import { log } from '../libs/logger';
 const packageJSON = require('../../package.json');
 
 export class PaypalPaymentService extends AbstractPaymentService {
@@ -132,6 +133,7 @@ export class PaypalPaymentService extends AbstractPaymentService {
         description: packageJSON.description,
         '@commercetools/sdk-client-v2': packageJSON.dependencies['@commercetools/sdk-client-v2'],
       }),
+      log: log,
     })();
 
     return handler.body;
