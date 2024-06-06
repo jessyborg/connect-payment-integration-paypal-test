@@ -38,7 +38,7 @@ export type PaymentResult = {
 
 export type ComponentOptions = {
   showPayButton?: boolean;
-  onClick?: () => boolean;
+  onPayButtonClick?: () => Promise<void>;
 };
 
 export interface PaymentEnabler {

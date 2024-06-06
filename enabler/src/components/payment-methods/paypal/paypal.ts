@@ -43,9 +43,11 @@ export class PaypalComponent extends DefaultPaypalComponent {
         label: "buynow",
       },
       fundingSource: 'paypal',
-      onClick: async (_, actions) => {
-        if (!this.componentOptions.onClick()) {
-          return actions.reject();
+      onClick: (_, actions) => {
+        if (this.componentOptions.onPayButtonClick) {
+          return this.componentOptions.onPayButtonClick()
+            .then(() => actions.resolve())
+            .catch(() => actions.reject());
         }
         return actions.resolve();
       },
