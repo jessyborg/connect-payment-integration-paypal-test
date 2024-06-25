@@ -264,7 +264,7 @@ export class PaypalPaymentService extends AbstractPaymentService {
   }
 
   public async processNotification(opts: { data: NotificationPayloadDTO }): Promise<void> {
-    const updateData = await this.notificationConverter.convert(opts.data);
+    const updateData = this.notificationConverter.convert(opts.data);
     await this.ctPaymentService.updatePayment(updateData);
   }
 
