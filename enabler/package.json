@@ -1,6 +1,6 @@
 {
   "name": "enabler",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite --port 3000",
@@ -22,5 +22,8 @@
     "typescript": "5.6.2",
     "vite": "5.4.6",
     "vite-plugin-css-injected-by-js": "3.5.1"
+  },
+  "overrides": {
+    "path-to-regexp": "3.3.0"
   }
 }
