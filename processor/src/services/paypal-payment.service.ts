@@ -149,7 +149,6 @@ export class PaypalPaymentService extends AbstractPaymentService {
       }),
       log: log,
     })();
-
     return handler.body;
   }
 
@@ -281,22 +280,25 @@ export class PaypalPaymentService extends AbstractPaymentService {
     const updateData = this.notificationConverter.convert(opts.data);
     await this.ctPaymentService.updatePayment(updateData);
     if(opts.data.event_type === NotificationEventType.PAYMENT_CAPTURE_COMPLETED){
+      console.log(JSON.stringify(opts.data))
       await this.convertCartToOrder(opts.data)
     }
   }
 
   private async convertCartToOrder(data: NotificationPayloadDTO){
     //invoice_id stands for the payment id stored in CT
-    const cart = await this.cartService.getCartByPaymentId(data.resource.invoice_id);
-
-    return (await apiRoot.orders().post(
-      {
-        body: {
-          version: cart.version,
-          cart: {id: cart.id} as CartResourceIdentifier
+    if(data.resource.invoice_id){
+      const cart = await this.cartService.getCartByPaymentId(data.resource.invoice_id);
+      return (await apiRoot.orders().post(
+        {
+          body: {
+            version: cart.version,
+            cart: {id: cart.id} as CartResourceIdentifier
+          }
         }
-      }
-    ).execute()).body;
+      ).execute()).body;
+    }
+    return Promise.reject();
   }
 
   /**
