@@ -35,7 +35,7 @@ import {
   OrderConfirmation,
   PaymentOutcome,
   PaypalPaymentServiceOptions,
-  TransactionTypes,
+  TransactionTypes, NotificationEventType,
 } from './types/paypal-payment.type';
 import { getConfig } from '../config/config';
 import {
@@ -51,17 +51,25 @@ import { SupportedPaymentComponentsSchemaDTO } from '../dtos/operations/payment-
 import { AbstractPaymentService } from './abstract-payment.service';
 import { NotificationConverter } from './converters/notification.converter';
 import { log } from '../libs/logger';
+import {apiRoot, client} from "../clients/commercetools/apiClient";
+import {
+  CartResourceIdentifier
+} from "@commercetools/platform-sdk";
+import {CartService} from "./cart.service";
+
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const packageJSON = require('../../package.json');
 
 export class PaypalPaymentService extends AbstractPaymentService {
   private paypalClient: PaypalAPI;
   private notificationConverter: NotificationConverter;
+  private cartService: CartService;
 
   constructor(opts: PaypalPaymentServiceOptions) {
     super(opts.ctCartService, opts.ctPaymentService);
     this.paypalClient = new PaypalAPI();
     this.notificationConverter = new NotificationConverter();
+    this.cartService = new CartService();
   }
 
   /**
@@ -272,6 +280,21 @@ export class PaypalPaymentService extends AbstractPaymentService {
   public async processNotification(opts: { data: NotificationPayloadDTO }): Promise<void> {
     const updateData = this.notificationConverter.convert(opts.data);
     await this.ctPaymentService.updatePayment(updateData);
+    await this.convertCartToOrder(opts.data)
+  }
+
+  private async convertCartToOrder(data: NotificationPayloadDTO){
+    //invoice_id stands for the payment id stored in CT
+    const cart = await this.cartService.getCartByPaymentId(data.resource.invoice_id);
+
+    return (await apiRoot.orders().post(
+      {
+        body: {
+          version: cart.version,
+          cart: {id: cart.id} as CartResourceIdentifier
+        }
+      }
+    ).execute()).body;
   }
 
   /**

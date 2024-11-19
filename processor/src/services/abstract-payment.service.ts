@@ -1,5 +1,5 @@
 import {
-  CommercetoolsCartService,
+  CommercetoolsCartService, CommercetoolsOrderService,
   CommercetoolsPaymentService,
   ErrorInvalidJsonInput,
   ErrorInvalidOperation,
@@ -21,6 +21,7 @@ import {
 } from '../dtos/operations/payment-intents.dto';
 
 import { SupportedPaymentComponentsSchemaDTO } from '../dtos/operations/payment-componets.dto';
+import {CartService} from "./cart.service";
 
 export abstract class AbstractPaymentService {
   protected ctCartService: CommercetoolsCartService;
