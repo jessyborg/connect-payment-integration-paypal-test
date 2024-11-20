@@ -56,6 +56,7 @@ import {
   CartResourceIdentifier
 } from "@commercetools/platform-sdk";
 import {CartService} from "./cart.service";
+import {OrderService} from "./order.service";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const packageJSON = require('../../package.json');
@@ -64,12 +65,14 @@ export class PaypalPaymentService extends AbstractPaymentService {
   private paypalClient: PaypalAPI;
   private notificationConverter: NotificationConverter;
   private cartService: CartService;
+  private orderService: OrderService;
 
   constructor(opts: PaypalPaymentServiceOptions) {
     super(opts.ctCartService, opts.ctPaymentService);
     this.paypalClient = new PaypalAPI();
     this.notificationConverter = new NotificationConverter();
     this.cartService = new CartService();
+    this.orderService = new OrderService();
   }
 
   /**
@@ -286,20 +289,17 @@ export class PaypalPaymentService extends AbstractPaymentService {
     }
   }
 
+  public async changeCartStatusToOrdered(cart: Cart){
+
+  }
+
   private async convertCartToOrder(data: NotificationPayloadDTO){
     //invoice_id stands for the payment id stored in CT
     log.info('invoice_id ' + data.resource.invoice_id)
     if(data.resource.invoice_id){
       const cart = await this.cartService.getCartByPaymentId(data.resource.invoice_id);
       log.info(cart);
-      return (await apiRoot.orders().post(
-        {
-          body: {
-            version: cart.version,
-            cart: {id: cart.id} as CartResourceIdentifier
-          }
-        }
-      ).execute()).body;
+      return (await this.orderService.createOrderFromCart(cart));
     }
     return Promise.reject();
   }
