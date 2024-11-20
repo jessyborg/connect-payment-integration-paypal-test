@@ -280,15 +280,18 @@ export class PaypalPaymentService extends AbstractPaymentService {
     const updateData = this.notificationConverter.convert(opts.data);
     await this.ctPaymentService.updatePayment(updateData);
     if(opts.data.event_type === NotificationEventType.PAYMENT_CAPTURE_COMPLETED){
-      console.log(JSON.stringify(opts.data))
+      log.info('Starting to convert cart to order')
+      log.info(JSON.stringify(opts.data))
       await this.convertCartToOrder(opts.data)
     }
   }
 
   private async convertCartToOrder(data: NotificationPayloadDTO){
     //invoice_id stands for the payment id stored in CT
+    log.info('invoice_id ' + data.resource.invoice_id)
     if(data.resource.invoice_id){
       const cart = await this.cartService.getCartByPaymentId(data.resource.invoice_id);
+      log.info(cart);
       return (await apiRoot.orders().post(
         {
           body: {
