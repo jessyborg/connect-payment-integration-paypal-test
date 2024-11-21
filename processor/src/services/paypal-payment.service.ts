@@ -298,9 +298,8 @@ export class PaypalPaymentService extends AbstractPaymentService {
     log.info('invoice_id ' + data.resource.invoice_id)
     if(data.resource.invoice_id){
       const cart = await this.cartService.getCartByPaymentId(data.resource.invoice_id);
-      const cartRecalculated = await this.cartService.recalculate(cart);
       log.info(cart);
-      return (await this.orderService.createOrderFromCart(cartRecalculated));
+      return (await this.orderService.createOrderFromCart(cart));
     }
     return Promise.reject();
   }
