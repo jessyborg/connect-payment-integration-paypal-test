@@ -10,7 +10,8 @@ export class OrderService {
           version: cart.version,
           cart: {id: cart.id} as CartResourceIdentifier,
           paymentState: 'Paid',
-          shipmentState: 'Pending'
+          shipmentState: 'Pending',
+          orderState: 'Confirmed'
         }
       }
     ).execute()).body;
