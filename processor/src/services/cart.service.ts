@@ -1,4 +1,5 @@
 import {apiRoot} from "../clients/commercetools/apiClient";
+import {Cart} from "@commercetools/connect-payments-sdk";
 
 export class CartService {
 
@@ -19,5 +20,20 @@ export class CartService {
     }
 
     return cartPaged.results[0];
+  }
+
+  public async recalculate(cart: Cart){
+    return (await apiRoot
+      .carts()
+      .withId({ID: cart.id})
+      .post({
+        version: cart.version,
+        actions: [
+          {
+            action: "recalculate",
+            updateProductData: true
+          }
+        ]
+      } as any).execute()).body;
   }
 }
