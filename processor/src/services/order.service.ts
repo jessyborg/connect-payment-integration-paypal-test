@@ -1,6 +1,7 @@
 import {apiRoot} from "../clients/commercetools/apiClient";
 import {CartResourceIdentifier} from "@commercetools/platform-sdk";
 import {Cart} from "@commercetools/connect-payments-sdk";
+import {randomUUID} from "crypto";
 
 export class OrderService {
   public async createOrderFromCart(cart: Cart){
@@ -11,7 +12,8 @@ export class OrderService {
           cart: {id: cart.id} as CartResourceIdentifier,
           paymentState: 'Paid',
           shipmentState: 'Pending',
-          orderState: 'Confirmed'
+          orderState: 'Confirmed',
+          orderNumber: randomUUID()
         }
       }
     ).execute()).body;
